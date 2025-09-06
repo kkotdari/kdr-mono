@@ -1,0 +1,29 @@
+# Main Configuration File
+# Defines which config files to load and available profiles
+
+configs:
+  font: "font.yaml"       # Font metrics and identity
+  build: "build.yaml"     # Build process settings
+  logging: "logging.yaml" # Logging configuration
+
+# Profile configurations (activated with -p or --profile)
+profiles:
+  test:
+    font: "font.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"
+
+  condensed:
+    font: "font-condensed.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"
+
+  compressed:
+    font: "font-compressed.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"
+
+  small:
+    font: "font-small.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"

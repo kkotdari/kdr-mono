@@ -1,0 +1,16 @@
+# Minimal Build Profile - Extends base build.yaml
+# For quick testing with minimal languages
+
+extends: "build.yaml"  # Inherit all settings from build.yaml
+
+# Override only specific settings
+languages:
+  english: true
+  korean: true
+  japanese: true
+
+build:
+  styles: "regular"
+
+output:
+  save_temp_files: false

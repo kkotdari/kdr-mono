@@ -1,0 +1,14 @@
+# Square Font Profile - Extends base font.yaml
+extends: "font.yaml"
+
+# Override specified values
+
+font:
+  family: "Kdr Mono Condensed"
+  family_short: "KdrMonoCondensed"
+
+# Width settings
+width:
+  half_width: 1000
+  full_width: 2000
+  threshold: 1500

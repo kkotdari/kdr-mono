@@ -1,0 +1,68 @@
+# Font Configuration
+
+font:
+  family: "Kdr Mono"
+  family_short: "KdrMono"
+  version: "1.0.0"
+  copyright: "Copyright (c) 2025, kkotdari"
+  manufacturer: "kkotdari"
+  designer: "kkotdari"
+  description: "A customizable monospace font system for perfect alignment across multiple languages. Optimized for programming with mixed Latin, Korean, and Japanese text."
+  license: "This Font Software is licensed under the SIL Open Font License, Version 1.1. Based on Meslo LG (Apache License 2.0) and Sarasa Gothic (SIL OFL 1.1)."
+  license_url: "http://scripts.sil.org/OFL"
+  vendor_url: "https://github.com/kkotdari/kdr-mono"
+  unique_id: "kkotdari: Kdr Mono: 2025"
+
+# Source fonts
+source_files:
+  english:
+    regular: "MesloLGM-Regular.ttf"
+    bold: "MesloLGM-Bold.ttf"
+    italic: "MesloLGM-Italic.ttf"
+    bold_italic: "MesloLGM-BoldItalic.ttf"
+
+  korean:
+    regular: "SarasaFixedK-Regular.ttf"
+    bold: "SarasaFixedK-Bold.ttf"
+    italic: "SarasaFixedK-Italic.ttf"
+    bold_italic: "SarasaFixedK-BoldItalic.ttf"
+
+  japanese:
+    regular: "SarasaFixedJ-Regular.ttf"
+    bold: "SarasaFixedJ-Bold.ttf"
+    italic: "SarasaFixedJ-Italic.ttf"
+    bold_italic: "SarasaFixedJ-BoldItalic.ttf"
+
+# Metrics
+metrics:
+  em_ascent: 1638
+  em_descent: 410
+  win_ascent: 1638
+  win_descent: 410
+  typo_line_gap: 0
+
+# Width settings
+width:
+  half_width: 1024
+  full_width: 2048
+  threshold: 1536
+
+# Scale factors
+scale:
+  half_width_x: 0.84
+  half_width_y: 0.92
+  full_width_x: 1.04
+  full_width_y: 1
+
+# Language adjustments
+english:
+  vertical_shift: 64
+  preserve_position: true
+
+korean:
+  vertical_shift: 0
+  remove_overlaps: true
+
+japanese:
+  vertical_shift: 16
+  remove_overlaps: true

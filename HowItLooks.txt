@@ -1,0 +1,134 @@
+package com.hyundai.qc;
+
+import java.util.*;
+import java.util.stream.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+
+/**
+ * 품질 공정(工程) 관리 시스템
+ *
+ * 모듈 구조:
+ * ├── QualityControl
+ * │   ├── calculateCpk()
+ * │   ├── inspectPlants()
+ * │   └── detectOutliers()
+ * ├── Monitor
+ * │   └── checkRealtime()
+ * └── BatchProcessor
+ *     └── processAsync()
+ */
+public class QualityControl {
+    private static final double SIGMA_LIMIT = 3.0;
+    private static final double MU_TARGET = 120.0;
+
+    // CPK 계산 - 공정 능력 평가
+    public double calculateCpk(List<Double> data,
+                               double usl, double lsl) {
+        var stats = data.stream()
+                .mapToDouble(Double::doubleValue)
+                .summaryStatistics();
+
+        double mean = stats.getAverage();
+        double sigma = Math.sqrt(data.stream()
+                .mapToDouble(x -> Math.pow(x - mean, 2))
+                .average().orElse(0));
+
+        return Math.min(
+                (usl - mean) / (3 * sigma),
+                (mean - lsl) / (3 * sigma)
+        );
+    }
+
+    // 공장별 품질 검사
+    public Map<String, Object> inspectPlants(
+            Map<String, List<Double>> plants) {
+
+        return plants.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> {
+                            var cpk = calculateCpk(e.getValue(),
+                                    125.0, 115.0);
+                            var dpmo = (int)((1 - normCdf(cpk * 3)) * 1e6);
+
+                            // 품질 수준 판정
+                            var status = cpk >= 1.33 ? "정상" :
+                                    cpk >= 1.0 ? "주의" : "불량";
+
+                            return Map.of(
+                                    "CPK", String.format("%.3f", cpk),
+                                    "DPMO", dpmo,
+                                    "수준", getSigmaLevel(cpk),
+                                    "상태", status,
+                                    "판정", dpmo <= 3.4 ? "합격" : "불합격"
+                            );
+                        }
+                ));
+    }
+
+    // 시그마 수준 결정
+    private String getSigmaLevel(double cpk) {
+        return cpk >= 2.0 ? "6-sigma" :
+                cpk >= 1.67 ? "5-sigma" :
+                        cpk >= 1.33 ? "4-sigma" :
+                                cpk >= 1.0 ? "3-sigma" : "<3-sigma";
+    }
+
+    // 정규분포 누적분포함수 근사
+    private double normCdf(double z) {
+        double t = 1.0 / (1.0 + 0.2316419 * Math.abs(z));
+        double d = 0.3989423 * Math.exp(-z * z / 2);
+        double p = d * t * (0.31938 + t * (-0.357 +
+                t * (1.782 + t * (-1.822 + t * 1.331))));
+        return z > 0 ? 1 - p : p;
+    }
+
+    // 실시간 모니터링
+    public String monitor(double value) {
+        double z = Math.abs(value - MU_TARGET) / SIGMA_LIMIT;
+
+        return z <= 1.0 ? "정상 [68%]" :
+                z <= 2.0 ? "주의 [95%]" :
+                        z <= 3.0 ? "경고 [99.7%]" :
+                                String.format("위험 [%.1f-sigma]", z);
+    }
+
+    // IQR 방식 이상치 검출
+    public List<Double> detectOutliers(
+            List<Double> data) {
+
+        var sorted = data.stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        int n = sorted.size();
+        double q1 = sorted.get(n / 4);
+        double q3 = sorted.get(3 * n / 4);
+        double iqr = q3 - q1;
+
+        // 1.5 IQR 규칙 적용
+        return data.stream()
+                .filter(x -> x < q1 - 1.5 * iqr ||
+                        x > q3 + 1.5 * iqr)
+                .collect(Collectors.toList());
+    }
+
+    // 병렬 배치 처리
+    public CompletableFuture<Map<String, Double>>
+    batchProcess(List<Supplier<Double>> tasks) {
+
+        var futures = tasks.stream()
+                .map(CompletableFuture::supplyAsync)
+                .collect(Collectors.toList());
+
+        return CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+        ).thenApply(v -> IntStream.range(0, futures.size())
+                .boxed()
+                .collect(Collectors.toMap(
+                        i -> "Task-" + i,
+                        i -> futures.get(i).join()
+                )));
+    }
+}

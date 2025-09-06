@@ -1,0 +1,48 @@
+# Build Configuration
+
+# Language support
+languages:
+  english: true
+  korean: true
+  japanese: true
+
+# Build settings
+build:
+  styles: "all"  # "all", "regular", "bold", "italic", "bold_italic", or list
+  skip_hinting: false
+  skip_kerning_removal: false
+  skip_overlap_removal: false
+
+# Character classification
+special_chars:
+  # Don't center these characters
+  no_center_ranges:
+    - [0x2500, 0x257F]  # Box Drawing
+    - [0x2580, 0x259F]  # Block Elements
+    - [0x25A0, 0x25FF]  # Geometric Shapes
+
+  # Don't scale these characters
+  no_scale_ranges:
+    - [0x2500, 0x257F]  # Box Drawing
+    - [0x2580, 0x259F]  # Block Elements
+    - [0x2190, 0x21FF]  # Arrows
+    - [0x2300, 0x23FF]  # Miscellaneous Technical
+    - [0x25A0, 0x25FF]  # Geometric Shapes
+    - [0x2600, 0x26FF]  # Miscellaneous Symbols
+    - [0xE0A0, 0xE0D4]  # Powerline symbols
+
+  # Force half-width
+  halfwidth_ranges:
+    - [0x0020, 0x007E]  # Basic ASCII
+    - [0xFF61, 0xFF9F]  # Halfwidth Katakana
+    - [0xFFA0, 0xFFDC]  # Halfwidth Hangul
+    - [0xFFE8, 0xFFEE]  # Halfwidth forms
+
+  # Force full-width
+  fullwidth_ranges:
+    - [0xFF01, 0xFF5E]  # Fullwidth ASCII variants
+    - [0xFFE0, 0xFFE6]  # Fullwidth symbols
+
+# Output settings
+output:
+  save_temp_files: false

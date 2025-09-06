@@ -1,0 +1,316 @@
+#!/usr/bin/env fontforge
+# Final Merge and Generation Script
+# Generated: {{ timestamp }}
+
+Print("FONTFORGE_START")
+
+fontfamily = "{{ font.family }}"
+fontfamily_short = "{{ font.family_short }}"
+
+# Style configuration
+{% set style_map = {
+    'regular': [0],
+    'bold': [1],
+    'italic': [2],
+    'bold_italic': [3],
+    'all': [0, 1, 2, 3]
+} %}
+
+{% if build.styles is string %}
+    {% if build.styles in style_map %}
+        {% set style_indices = style_map[build.styles] %}
+    {% else %}
+        {% set style_indices = [0] %}
+    {% endif %}
+{% elif build.styles is sequence %}
+    {% set style_indices = [] %}
+    {% for style in build.styles %}
+        {% if style == 'regular' %}{% set _ = style_indices.append(0) %}{% endif %}
+        {% if style == 'bold' %}{% set _ = style_indices.append(1) %}{% endif %}
+        {% if style == 'italic' %}{% set _ = style_indices.append(2) %}{% endif %}
+        {% if style == 'bold_italic' %}{% set _ = style_indices.append(3) %}{% endif %}
+    {% endfor %}
+{% else %}
+    {% set style_indices = [0, 1, 2, 3] %}
+{% endif %}
+
+styles = Array(4)
+styles[0] = "Regular"
+styles[1] = "Bold"
+styles[2] = "Italic"
+styles[3] = "Bold Italic"
+
+file_names = Array(4)
+file_names[0] = "Regular"
+file_names[1] = "Bold"
+file_names[2] = "Italic"
+file_names[3] = "BoldItalic"
+
+weights = Array(4)
+weights[0] = 400
+weights[1] = 700
+weights[2] = 400
+weights[3] = 700
+
+copyright = "{{ font.copyright }}"
+version = "{{ font.version }}"
+
+win_ascent = {{ metrics.win_ascent | int }}
+win_descent = {{ metrics.win_descent | int }}
+em_ascent = {{ metrics.em_ascent | int }}
+em_descent = {{ metrics.em_descent | int }}
+
+styles_to_process = Array({{ style_indices|length }})
+{% for idx in style_indices %}
+styles_to_process[{{ loop.index0 }}] = {{ idx }}
+{% endfor %}
+
+Print("Processing " + ToString(SizeOf(styles_to_process)) + " styles")
+
+j = 0
+while (j < SizeOf(styles_to_process))
+    i = styles_to_process[j]
+
+    Print("STYLE_START:" + styles[i])
+
+    # File paths
+    en_file = "{{ tmpdir }}/EN-" + file_names[i] + ".sfd"
+    kr_file = "{{ tmpdir }}/KR-" + file_names[i] + ".sfd"
+    jp_file = "{{ tmpdir }}/JP-" + file_names[i] + ".sfd"
+
+    Print("PHASE:Checking files")
+
+    # Check English (required as base)
+    {% if languages.english %}
+    if (FileAccess(en_file) < 0)
+        Print("ERROR: English file not found: " + en_file)
+        j = j + 1
+        continue
+    endif
+    Print("  English: " + en_file + " [OK]")
+    {% else %}
+    Print("  English: disabled in config")
+    {% endif %}
+
+    # Check Korean (optional)
+    {% if languages.korean %}
+    kr_exists = 0
+    if (FileAccess(kr_file) >= 0)
+        kr_exists = 1
+        Print("  Korean: " + kr_file + " [OK]")
+    else
+        Print("  Korean: " + kr_file + " [NOT FOUND - will skip]")
+    endif
+    {% else %}
+    kr_exists = 0
+    Print("  Korean: disabled in config")
+    {% endif %}
+
+    # Check Japanese (optional)
+    {% if languages.japanese %}
+    jp_exists = 0
+    if (FileAccess(jp_file) >= 0)
+        jp_exists = 1
+        Print("  Japanese: " + jp_file + " [OK]")
+    else
+        Print("  Japanese: " + jp_file + " [NOT FOUND - will skip]")
+    endif
+    {% else %}
+    jp_exists = 0
+    Print("  Japanese: disabled in config")
+    {% endif %}
+
+    # Load base font (English or first available)
+    {% if languages.english %}
+    Print("PHASE:Loading English as base")
+    Open(en_file)
+
+    # Check ASCII 0
+    Select(0u0030)
+    if (WorthOutputting())
+        Print("ASCII '0' present in English base")
+    else
+        Print("WARNING: ASCII '0' missing in English base!")
+    endif
+
+    # Count English
+    en_count = 0
+    SelectWorthOutputting()
+    foreach
+        en_count = en_count + 1
+    endloop
+    Print("English base: " + ToString(en_count) + " glyphs")
+
+    {% elif languages.korean %}
+    # No English, use Korean as base
+    Print("PHASE:Loading Korean as base (no English)")
+    if (kr_exists == 1)
+        Open(kr_file)
+        kr_exists = 0  # Mark as already loaded
+
+        kr_count = 0
+        SelectWorthOutputting()
+        foreach
+            kr_count = kr_count + 1
+        endloop
+        Print("Korean base: " + ToString(kr_count) + " glyphs")
+    else
+        Print("ERROR: No base font available!")
+        j = j + 1
+        continue
+    endif
+
+    {% elif languages.japanese %}
+    # No English or Korean, use Japanese as base
+    Print("PHASE:Loading Japanese as base (no English/Korean)")
+    if (jp_exists == 1)
+        Open(jp_file)
+        jp_exists = 0  # Mark as already loaded
+
+        jp_count = 0
+        SelectWorthOutputting()
+        foreach
+            jp_count = jp_count + 1
+        endloop
+        Print("Japanese base: " + ToString(jp_count) + " glyphs")
+    else
+        Print("ERROR: No base font available!")
+        j = j + 1
+        continue
+    endif
+    {% else %}
+    Print("ERROR: No languages enabled!")
+    j = j + 1
+    continue
+    {% endif %}
+
+    # Merge Korean if exists and not already loaded
+    {% if languages.korean %}
+    if (kr_exists == 1)
+        Print("PHASE:Merging Korean glyphs")
+        MergeFonts(kr_file)
+
+        kr_count = 0
+        SelectWorthOutputting()
+        foreach
+            kr_count = kr_count + 1
+        endloop
+        Print("After Korean merge: " + ToString(kr_count) + " glyphs")
+    endif
+    {% endif %}
+
+    # Merge Japanese if exists and not already loaded
+    {% if languages.japanese %}
+    if (jp_exists == 1)
+        Print("PHASE:Merging Japanese glyphs")
+        MergeFonts(jp_file)
+
+        jp_count = 0
+        SelectWorthOutputting()
+        foreach
+            jp_count = jp_count + 1
+        endloop
+        Print("After Japanese merge: " + ToString(jp_count) + " glyphs")
+    endif
+    {% endif %}
+
+    # Verify critical glyphs after merge
+    {% if languages.english %}
+    Select(0u0030)
+    if (WorthOutputting())
+        Print("ASCII '0' verified after merge")
+    else
+        Print("WARNING: ASCII '0' lost during merge!")
+    endif
+    {% endif %}
+
+    # Set basic font names
+    SetFontNames(fontfamily_short + "-" + file_names[i], fontfamily, fontfamily + " " + styles[i], styles[i], copyright, version)
+
+    # Set detailed font metadata via TTF name table
+    Print("PHASE:Setting font metadata")
+    full_name = fontfamily + " " + styles[i]
+    unique_id = "{{ font.unique_id | default('kkotdari: Kdr Mono: 2025') }}" + ":" + styles[i]
+
+    # Set TTF name table entries (0x409 = US English)
+    SetTTFName(0x409, 0, copyright)                                    # Copyright
+    SetTTFName(0x409, 1, fontfamily)                                   # Family Name
+    SetTTFName(0x409, 2, styles[i])                                    # Subfamily Name
+    SetTTFName(0x409, 3, unique_id)                                    # Unique ID
+    SetTTFName(0x409, 4, full_name)                                    # Full Name
+    SetTTFName(0x409, 5, "Version " + version)                         # Version
+    SetTTFName(0x409, 6, fontfamily_short + "-" + styles[i])          # PostScript Name
+    SetTTFName(0x409, 7, "Kdr Mono is a trademark of kkotdari")  # Trademark
+    SetTTFName(0x409, 8, "{{ font.manufacturer | default('kkotdari') }}")  # Manufacturer
+    SetTTFName(0x409, 9, "{{ font.designer | default('kkotdari') }}")      # Designer
+    SetTTFName(0x409, 10, "{{ font.description | default('A monospace font for multilingual programming') }}")  # Description
+    {% if font.vendor_url is defined %}
+    SetTTFName(0x409, 11, "{{ font.vendor_url }}")                     # Vendor URL
+    {% endif %}
+    {% if font.license is defined %}
+    SetTTFName(0x409, 13, "{{ font.license }}")                        # License Description
+    {% endif %}
+    {% if font.license_url is defined %}
+    SetTTFName(0x409, 14, "{{ font.license_url }}")                    # License URL
+    {% endif %}
+
+    SetOS2Value("Weight", weights[i])
+    SetOS2Value("WinAscent", win_ascent)
+    SetOS2Value("WinDescent", win_descent)
+    SetOS2Value("TypoAscent", em_ascent)
+    SetOS2Value("TypoDescent", -em_descent)
+
+    # Remove kerning and ligatures
+    Print("PHASE:Removing kerning and ligatures")
+    SelectAll()
+    RemoveAllKerns()
+
+    lookups = GetLookups("GSUB")
+    if (SizeOf(lookups) > 0)
+        k = SizeOf(lookups) - 1
+        while (k >= 0)
+            RemoveLookup(lookups[k])
+            k = k - 1
+        endloop
+        Print("Removed " + ToString(SizeOf(lookups)) + " GSUB lookups")
+    endif
+
+    lookups = GetLookups("GPOS")
+    if (SizeOf(lookups) > 0)
+        k = SizeOf(lookups) - 1
+        while (k >= 0)
+            RemoveLookup(lookups[k])
+            k = k - 1
+        endloop
+        Print("Removed " + ToString(SizeOf(lookups)) + " GPOS lookups")
+    endif
+
+    # Generate font
+    Print("PHASE:Generating font")
+    output_file = "{{ output_dir }}/" + fontfamily_short + "-" + file_names[i] + ".ttf"
+
+    # Make sure something is selected before Generate
+    SelectWorthOutputting()
+
+    # Count final glyphs
+    final_count = 0
+    foreach
+        final_count = final_count + 1
+    endloop
+    Print("Final glyph count: " + ToString(final_count))
+
+    if (final_count > 0)
+        Generate(output_file, "", 0x8020068)
+        Print("GENERATED:" + output_file)
+    else
+        Print("ERROR: No glyphs to generate!")
+    endif
+
+    Close()
+    Print("STYLE_END:" + styles[i])
+
+    j = j + 1
+endloop
+
+Print("FONTFORGE_END")
+Quit(0)

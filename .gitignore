@@ -1,0 +1,6 @@
+.idea
+.vscode
+backups/
+output/
+logs/
+venv/
