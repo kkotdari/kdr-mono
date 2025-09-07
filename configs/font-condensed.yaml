@@ -9,6 +9,6 @@ font:
 
 # Width settings
 width:
-  half_width: 1000
-  full_width: 2000
-  threshold: 1500
+  half_width: 992
+  full_width: 1984
+  threshold: 1488

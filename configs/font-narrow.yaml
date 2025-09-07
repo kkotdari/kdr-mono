@@ -4,14 +4,8 @@ extends: "font.yaml"
 # Override specified values
 
 font:
-  family: "Kdr Mono Compressed"
-  family_short: "KdrMonoCompressed"
-
-# Width settings
-width:
-  half_width: 992
-  full_width: 1984
-  threshold: 1488
+  family: "Kdr Mono Narrow"
+  family_short: "KdrMonoNarrow"
 
 scale:
   half_width_x: 0.76

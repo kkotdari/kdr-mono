@@ -110,9 +110,9 @@ python run.py --workers 2
 ### Available Profiles
 
 - `default` - Standard configuration (1024/2048 width)
-- `condensed` - Narrower width (1000/2000) 
-- `compressed` - Maximum horizontal compression (scaled x only)
+- `condensed` - Narrower width (1000/2000)
 - `small` - Reduced overall size (scaled down x/y)
+- `compressed` - Maximum horizontal compression (scaled x only)
 - `test` - Quick testing mode
 
 ---
@@ -147,7 +147,7 @@ configs/
 ```yaml
 font:
   family: "Kdr Mono"
-  version: "1.0.0"
+  version: "1.0.1"
   
 # Character dimensions (em units)
 width:
@@ -217,12 +217,6 @@ Profiles allow quick switching between different font configurations. Use with `
 ```bash
 python run.py --profile condensed
 ```
-
-Profile characteristics:
-- `condensed` - Uses 1000/2000 width instead of 1024/2048 (narrower base width)
-- `compressed` - Reduces only x scale factor (maximum horizontal compression)
-- `small` - Reduces both x and y scale factors (smaller overall size)
-- `test` - Quick testing with minimal processing
 
 ### Creating Custom Configurations
 
@@ -324,12 +318,10 @@ The build system includes several hooks for customization:
 
 ### Width Configuration Comparison
 
-| Configuration | Half/Full Width | 1:2 Ratio Accuracy | Best For |
-|---------------|-----------------|-------------------|----------|
-| **Default (1024/2048)** | 1024/2048 | Perfect at all sizes | Mathematical precision |
-| **Condensed (1000/2000)** | 1000/2000 | Perfect at 8-20pt, degrades at 24pt+ | Better spacing for coding |
-| **Compressed** | Horizontally compressed | Varies by size | Maximum density |
-| **Small** | Scaled down | Varies by size | Compact displays |
+| Half/Full Width | 1:2 Ratio Accuracy | Best For |
+|-----------------|-------------------|----------|
+| 1024/2048 | Perfect at all sizes | Mathematical precision |
+| 1000/2000 | Perfect at 8-20pt, degrades at 24pt+ | Better spacing for coding |
 
 ### Parallel Processing
 
@@ -407,7 +399,7 @@ output:
 
 ### 2. Individual Language Processing
 - **English**: Base font processing with character classification
-- **Korean**: Overlap removal and CJK-specific adjustments  
+- **Korean**: Overlap removal and CJK-specific adjustments
 - **Japanese**: Overlap removal with Korean/English precedence
 
 ### 3. Font Merging
@@ -522,6 +514,6 @@ This project wouldn't be possible without:
 
 ---
 
-**Version**: 1.0.0  
+**Version**: 1.0.1
 **Author**: kkotdari  
 **Repository**: https://github.com/kkotdari/kdr-mono
