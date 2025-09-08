@@ -8,7 +8,7 @@ font:
   family_short: "KdrMonoCompact"
 
 scale:
-  half_width_x: 0.76
+  half_width_x: 0.73
   half_width_y: 0.82
-  full_width_x: 0.94
-  full_width_y: 0.9
+  full_width_x: 0.92
+  full_width_y: 0.87
