@@ -514,6 +514,6 @@ This project wouldn't be possible without:
 
 ---
 
-**Version**: 1.0.3
+**Version**: 1.0.4
 **Author**: kkotdari  
 **Repository**: https://github.com/kkotdari/kdr-mono
