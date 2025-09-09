@@ -13,18 +13,8 @@ profiles:
     build: "build.yaml"
     logging: "logging.yaml"
 
-  extended:
-    font: "font-extended.yaml"
-    build: "build.yaml"
-    logging: "logging.yaml"
-
   narrow:
     font: "font-narrow.yaml"
-    build: "build.yaml"
-    logging: "logging.yaml"
-
-  compact:
-    font: "font-compact.yaml"
     build: "build.yaml"
     logging: "logging.yaml"
 
