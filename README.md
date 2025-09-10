@@ -109,10 +109,8 @@ python run.py --workers 2
 
 ### Available Profiles
 
-- `default` - Standard configuration (1024/2048 width)
-- `condensed` - Narrower width (1000/2000)
-- `small` - Reduced overall size (scaled down x/y)
-- `compressed` - Maximum horizontal compression (scaled x only)
+- `default` - Standard configuration
+- `condensed` - Narrower width
 - `test` - Quick testing mode
 
 ---
@@ -122,7 +120,7 @@ python run.py --workers 2
 ### Important Notes
 
 **Width Settings for Perfect 1:2 Ratio**
-To maintain exact 1:2 half-width to full-width ratio across all even font sizes, use `width: 1024/2048`. This is the only configuration that guarantees pixel-perfect rendering at all sizes without rounding errors. Other width values (like 1000/2000) may cause ratio degradation at certain font sizes.
+To maintain exact 1:2 half-width to full-width ratio across common font sizes (12, 14, 16, 18px), use `width: 750/1500` or `width: 1000/2000`. These configurations guarantee pixel-perfect rendering without rounding errors. The 1024/2048 configuration actually causes ratio degradation at all common font sizes due to rounding issues (e.g., 12.288px rounds to 12px while 24.576px rounds to 25px, breaking the 1:2 ratio).
 
 **Scale Factor Limits**
 Keep vertical scale factors (`half_width_y`, `full_width_y`) at or below 1.0 to prevent glyph clipping. Values above 1.0 may cause the top or bottom of characters to be cut off, especially for characters with tall ascenders or deep descenders.
@@ -151,25 +149,25 @@ font:
   
 # Character dimensions (em units)
 width:
-  half_width: 1024      # Half-width character width
-  full_width: 2048      # Full-width character width (should be 2× half)
-  threshold: 1536       # Auto-detection threshold for width classification
+  half_width: 1000      # Half-width character width
+  full_width: 2000      # Full-width character width (should be 2× half)
+  threshold: 1500       # Auto-detection threshold for width classification
 
 # Scaling factors (decimal values, 1.0 = 100%)
 scale:
-  half_width_x: 0.86    # Horizontal scale for half-width chars
+  half_width_x: 0.84    # Horizontal scale for half-width chars
   half_width_y: 0.94    # Vertical scale for half-width chars
   full_width_x: 1.04    # Horizontal scale for full-width chars
   full_width_y: 1.0     # Vertical scale for full-width chars
 
 # Language-specific vertical adjustments
 english:
-  vertical_shift: 40    # Pixels to shift English glyphs vertically
+  vertical_shift: 64    # Pixels to shift English glyphs vertically
 korean:
-  vertical_shift: -16   # Pixels to shift Korean glyphs
+  vertical_shift: 0   # Pixels to shift Korean glyphs
   remove_overlaps: true # Remove duplicate glyphs from English
 japanese:
-  vertical_shift: -8
+  vertical_shift: 16
   remove_overlaps: true # Remove duplicates from English & Korean
 ```
 
@@ -320,8 +318,8 @@ The build system includes several hooks for customization:
 
 | Half/Full Width | 1:2 Ratio Accuracy | Best For |
 |-----------------|-------------------|----------|
-| 1024/2048 | Perfect at all sizes | Mathematical precision |
-| 1000/2000 | Perfect at 8-20pt, degrades at 24pt+ | Better spacing for coding |
+| 1000/2000 | Perfect at all sizes | Simple calculation, wide spacing |
+| 750/1500 | Perfect at 12/14/16/18pt | Optimal for common font sizes |
 
 ### Parallel Processing
 
@@ -514,6 +512,6 @@ This project wouldn't be possible without:
 
 ---
 
-**Version**: 1.0.4
+**Version**: 1.1.0
 **Author**: kkotdari  
 **Repository**: https://github.com/kkotdari/kdr-mono

@@ -13,17 +13,7 @@ profiles:
     build: "build.yaml"
     logging: "logging.yaml"
 
-  narrow:
-    font: "font-narrow.yaml"
-    build: "build.yaml"
-    logging: "logging.yaml"
-
   condensed:
     font: "font-condensed.yaml"
-    build: "build.yaml"
-    logging: "logging.yaml"
-
-  compressed:
-    font: "font-compressed.yaml"
     build: "build.yaml"
     logging: "logging.yaml"
