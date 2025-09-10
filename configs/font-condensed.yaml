@@ -9,10 +9,10 @@ font:
 
 # Width settings
 width:
-  half_width: 750
-  full_width: 1500
-  threshold: 1125
+  half_width: 932
+  full_width: 1864
+  threshold: 1398
 
 scale:
-  half_width_x: 0.66
-  full_width_x: 0.82
+  half_width_x: 0.78
+  full_width_x: 0.97

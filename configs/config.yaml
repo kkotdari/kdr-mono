@@ -22,3 +22,8 @@ profiles:
     font: "font-condensed.yaml"
     build: "build.yaml"
     logging: "logging.yaml"
+
+  compressed:
+    font: "font-compressed.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"

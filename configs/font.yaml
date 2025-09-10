@@ -3,7 +3,7 @@
 font:
   family: "Kdr Mono"
   family_short: "KdrMono"
-  version: "1.1.1"
+  version: "1.1.2"
   copyright: "Copyright (c) 2025, kkotdari"
   manufacturer: "kkotdari"
   designer: "kkotdari"
@@ -35,10 +35,10 @@ source_files:
 
 # Metrics
 metrics:
-  em_ascent: 1638
-  em_descent: 410
-  win_ascent: 1638
-  win_descent: 410
+  em_ascent: 1600
+  em_descent: 400
+  win_ascent: 1600
+  win_descent: 400
   typo_line_gap: 0
 
 # Width settings
