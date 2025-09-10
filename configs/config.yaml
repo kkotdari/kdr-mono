@@ -13,6 +13,11 @@ profiles:
     build: "build.yaml"
     logging: "logging.yaml"
 
+  extended:
+    font: "font-extended.yaml"
+    build: "build.yaml"
+    logging: "logging.yaml"
+
   condensed:
     font: "font-condensed.yaml"
     build: "build.yaml"
