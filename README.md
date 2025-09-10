@@ -318,8 +318,9 @@ The build system includes several hooks for customization:
 
 | Half/Full Width | 1:2 Ratio Accuracy | Best For |
 |-----------------|-------------------|----------|
-| 1000/2000 | Perfect at all sizes | Simple calculation, wide spacing |
-| 750/1500 | Perfect at 12/14/16/18pt | Optimal for common font sizes |
+| 1000/2000 | Perfect at all sizes (any integer px) | Simple calculation, wide spacing |
+| 850/1700 | Perfect: 10, 12, 14, 20px / Failed: 11, 13, 15, 16, 17, 18, 19px | Best compromise for 14px users |
+| 750/1500 | Perfect: 10, 12, 14, 16, 18, 20px / Failed: 11, 13, 15, 17, 19px | Optimal for even sizes, compact |
 
 ### Parallel Processing
 
