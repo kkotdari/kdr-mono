@@ -3,7 +3,7 @@
 font:
   family: "Kdr Mono"
   family_short: "KdrMono"
-  version: "1.1.0"
+  version: "1.1.1"
   copyright: "Copyright (c) 2025, kkotdari"
   manufacturer: "kkotdari"
   designer: "kkotdari"
@@ -51,7 +51,7 @@ width:
 scale:
   half_width_x: 0.84
   half_width_y: 0.94
-  full_width_x: 1
+  full_width_x: 1.04
   full_width_y: 1
 
 # Language adjustments
