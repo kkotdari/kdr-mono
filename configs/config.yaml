@@ -23,7 +23,7 @@ profiles:
     build: "build.yaml"
     logging: "logging.yaml"
 
-  tall:
-    font: "font-tall.yaml"
+  compressed:
+    font: "font-compressed.yaml"
     build: "build.yaml"
     logging: "logging.yaml"
