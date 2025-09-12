@@ -318,8 +318,24 @@ The build system includes several hooks for customization:
 
 | Half/Full Width | 1:2 Ratio Accuracy | Best For |
 |-----------------|-------------------|----------|
-| 1000/2000 | Perfect at all sizes | Simple calculation, wide spacing |
-| 750/1500 | Perfect at 12/14/16/18pt | Optimal for common font sizes |
+| 1000/2000 | Perfect at all sizes (any integer px) | Simple calculation, wide spacing |
+| 860/1720 | Perfect at 10/14/16px, Near-perfect at 12px, Failed at others | Balanced width, good for 14/16px focus |
+| 750/1500 | Perfect at 10/12/14/16/18/20px, Failed at all odd sizes | Optimal for even sizes, compact |
+
+### Detailed Size Support
+
+#### 1000/2000 (100%)
+- **Perfect (all)**: 10px, 11px, 12px, 13px, 14px, 15px, 16px, 17px, 18px, 19px, 20px...
+- Every integer font size maintains exact 1:2 ratio
+
+#### 860/1720 (86%)
+- **Perfect (3)**: 10px (8.6px/17.2px), 14px (12.04px→12px/24.08px→24px), 16px (13.76px→14px/27.52px→28px)
+- **Near-perfect (1)**: 12px (10.32px→10px/20.64px→21px) - 10:21 ratio, only 0.64px off
+- **Failed (7)**: 11px (9:19), 13px (11:22), 15px (13:26), 17px (15:29), 18px (15:31), 19px (16:33), 20px (17:34)
+
+#### 750/1500 (75%)
+- **Perfect (6)**: 10px (7.5px/15px), 12px (9px/18px), 14px (10.5px/21px), 16px (12px/24px), 18px (13.5px/27px), 20px (15px/30px)
+- **Failed (5)**: 11px (8px/17px), 13px (10px/20px), 15px (11px/23px), 17px (13px/26px), 19px (14px/29px)
 
 ### Parallel Processing
 
@@ -512,6 +528,6 @@ This project wouldn't be possible without:
 
 ---
 
-**Version**: 1.1.0
+**Version**: 1.1.2
 **Author**: kkotdari  
 **Repository**: https://github.com/kkotdari/kdr-mono
